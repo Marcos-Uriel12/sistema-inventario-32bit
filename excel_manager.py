@@ -2,8 +2,16 @@ import pandas as pd
 from pathlib import Path
 from datetime import datetime
 import os
+import sys
 
-BASE_DIR = Path(__file__).resolve().parent
+def _get_base_dir():
+    if getattr(sys, 'frozen', False):
+        base = Path(sys.executable).parent
+    else:
+        base = Path(__file__).resolve().parent
+    return base
+
+BASE_DIR = _get_base_dir()
 INVENTORY_FILE = BASE_DIR / "inventario.xlsx"
 BACKUP_DIR = BASE_DIR / "backup"
 
@@ -37,6 +45,8 @@ def _inicializar_cache():
     except Exception:
         _df_cache = pd.DataFrame(columns=COLUMNAS)
         _df_cache.set_index("codigo", inplace=True)
+        _df_cache.to_excel(INVENTORY_FILE, index=True)
+        _cache_mtime = INVENTORY_FILE.stat().st_mtime
 
 
 def _verificar_cache():
@@ -47,7 +57,10 @@ def _verificar_cache():
         return
     
     if not INVENTORY_FILE.exists():
-        _inicializar_cache()
+        _df_cache = pd.DataFrame(columns=COLUMNAS)
+        _df_cache.set_index("codigo", inplace=True)
+        _df_cache.to_excel(INVENTORY_FILE, index=True)
+        _cache_mtime = INVENTORY_FILE.stat().st_mtime
         return
     
     try:
@@ -55,7 +68,7 @@ def _verificar_cache():
         if current_mtime != _cache_mtime:
             _inicializar_cache()
     except Exception:
-        pass
+        _inicializar_cache()
 
 
 def cargar_datos():
