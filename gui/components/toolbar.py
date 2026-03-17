@@ -3,12 +3,14 @@ import customtkinter as ctk
 
 
 class Toolbar(tk.Frame):
-    def __init__(self, parent, on_add_product=None, on_refresh=None, on_sort=None, on_update_prices=None):
+    def __init__(self, parent, on_add_product=None, on_refresh=None, on_sort=None, on_update_prices=None, on_sell=None, on_view_sales=None):
         super().__init__(parent, bg="#000000")
         self.on_add_product = on_add_product
         self.on_refresh = on_refresh
         self.on_sort = on_sort
         self.on_update_prices = on_update_prices
+        self.on_sell = on_sell
+        self.on_view_sales = on_view_sales
         self._setup_ui()
 
     def _setup_ui(self):
@@ -57,7 +59,7 @@ class Toolbar(tk.Frame):
 
         self.refresh_button = ctk.CTkButton(
             self,
-            text="↻ Actualizar",
+            text="Actualizar",
             height=45,
             font=("Helvetica", 11),
             fg_color="#1f538d",
@@ -66,6 +68,30 @@ class Toolbar(tk.Frame):
             command=self._on_refresh_click
         )
         self.refresh_button.pack(side="left", padx=5)
+
+        self.sell_button = ctk.CTkButton(
+            self,
+            text="Vender",
+            height=45,
+            font=("Helvetica", 11, "bold"),
+            fg_color="#9b59b6",
+            hover_color="#8e44ad",
+            text_color="white",
+            command=self._on_sell_click
+        )
+        self.sell_button.pack(side="left", padx=5)
+
+        self.view_sales_button = ctk.CTkButton(
+            self,
+            text="Historial",
+            height=45,
+            font=("Helvetica", 11),
+            fg_color="#3498db",
+            hover_color="#2980b9",
+            text_color="white",
+            command=self._on_view_sales_click
+        )
+        self.view_sales_button.pack(side="left", padx=5)
 
     def _on_add_click(self):
         if self.on_add_product:
@@ -78,6 +104,14 @@ class Toolbar(tk.Frame):
     def _on_refresh_click(self):
         if self.on_refresh:
             self.on_refresh()
+
+    def _on_sell_click(self):
+        if self.on_sell:
+            self.on_sell()
+
+    def _on_view_sales_click(self):
+        if self.on_view_sales:
+            self.on_view_sales()
 
     def _on_sort_change(self, value):
         if value == "Ordenar por...":

@@ -8,6 +8,8 @@ from .dialogs.add_product_dialog import AddProductDialog
 from .dialogs.update_product_dialog import UpdateProductDialog
 from .dialogs.delete_product_dialog import DeleteProductDialog
 from .dialogs.update_prices_dialog import UpdatePricesDialog
+from .dialogs.sales_dialog import SalesDialog
+from .dialogs.sales_history_dialog import SalesHistoryDialog
 
 
 class MainWindow(tk.Frame):
@@ -33,7 +35,9 @@ class MainWindow(tk.Frame):
             on_add_product=self._on_add_product,
             on_refresh=self._load_products,
             on_sort=self._on_sort,
-            on_update_prices=self._on_update_prices
+            on_update_prices=self._on_update_prices,
+            on_sell=self._on_sell,
+            on_view_sales=self._on_view_sales
         )
         self.toolbar.pack(fill="x", pady=(10, 15))
 
@@ -124,3 +128,9 @@ class MainWindow(tk.Frame):
             producto,
             on_success=self._load_products
         )
+
+    def _on_sell(self):
+        dialog = SalesDialog(self.parent, on_success=self._load_products)
+
+    def _on_view_sales(self):
+        dialog = SalesHistoryDialog(self.parent)

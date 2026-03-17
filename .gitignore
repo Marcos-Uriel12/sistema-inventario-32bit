@@ -7,6 +7,8 @@ venv/
 build/
 dist/
 *.xlsx
-!inventario.xlsx
+inventario.xlsx
 backup/
+ventas_mensuales/
 .pytest_cache/
+*.log
